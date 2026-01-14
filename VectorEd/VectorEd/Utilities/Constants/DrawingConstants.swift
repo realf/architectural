@@ -12,6 +12,7 @@ enum DrawingConstants {
     static let defaultStrokeWidth: CGFloat = 2.0
     static let defaultStrokeColor: UIColor = .black
     static let defaultFillColor: UIColor = .clear
+    static let defaultCircleSize: CGFloat = 50.0
 
     // Canvas
     static let defaultCanvasSize = CGSize(width: 1024, height: 768)

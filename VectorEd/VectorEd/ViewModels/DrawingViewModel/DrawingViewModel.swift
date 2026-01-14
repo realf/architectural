@@ -5,8 +5,8 @@
 //  Created by alf on 14.01.2026.
 //
 
-import UIKit
 import Combine
+import UIKit
 
 class DrawingViewModel {
     /// Current drawing document
@@ -55,17 +55,41 @@ class DrawingViewModel {
 
         // Create temporary shape
         let shapeType = shapeTypeForTool(currentTool)
-        let bounds = CGRect(origin: point, size: .zero)
-        state.temporaryShape = ShapeFactory.createShape(
-            type: shapeType,
-            bounds: bounds,
-            style: currentStyle
-        )
+        switch shapeType {
+        case .rectangle:
+            let bounds = CGRect(origin: point, size: .zero)
+            state.temporaryShape = ShapeFactory.createShape(
+                type: shapeType,
+                bounds: bounds,
+                style: currentStyle
+            )
+        case .circle:
+            let size = DrawingConstants.defaultCircleSize
+            let bounds = CGRect(
+                origin: CGPoint(
+                    x: point.x - size / 2.0,
+                    y: point.y - size / 2.0
+                ),
+                size: CGSize(
+                    width: size,
+                    height: size
+                )
+            )
+            state.temporaryShape = ShapeFactory.createShape(
+                type: shapeType,
+                bounds: bounds,
+                style: currentStyle
+            )
+        case .freehand, .triangle:
+            fatalError("Tool not yet implemented")
+        }
     }
 
     /// Update shape being drawn
     func updateDrawing(to point: CGPoint) {
-        guard state.isDrawing, var tempShape = state.temporaryShape else { return }
+        guard state.isDrawing, var tempShape = state.temporaryShape else {
+            return
+        }
 
         if currentTool == .rectangle {
             guard let startPoint = state.touchStartPoint else { return }
@@ -110,7 +134,7 @@ class DrawingViewModel {
 
     // MARK: - Persistence
 
-    func save()  {
+    func save() {
         // TODO
     }
 
