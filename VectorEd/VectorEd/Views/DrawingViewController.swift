@@ -61,10 +61,50 @@ class DrawingViewController: UIViewController {
     }
 
     private func setupBindings() {
-        // TODO
+        viewModel.$document
+            .sink { [weak self] document in
+                self?.canvasView.render(document: document)
+            }
+            .store(in: &cancellables)
+
+        viewModel.$state
+            .sink { [weak self] state in
+                self?.canvasView.updateState(state)
+            }
+            .store(in: &cancellables)
     }
 
     private func setupGestures() {
-        // TODO
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        canvasView.addGestureRecognizer(panGesture)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        canvasView.addGestureRecognizer(tapGesture)
+    }
+
+    // MARK: - Gesture Handlers
+
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let location = gesture.location(in: canvasView)
+
+        switch gesture.state {
+        case .began:
+            viewModel.beginDrawing(at: location)
+
+        case .changed:
+            viewModel.updateDrawing(to: location)
+
+        case .ended, .cancelled:
+            viewModel.endDrawing()
+
+        default:
+            break
+        }
+    }
+
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: canvasView)
+        viewModel.beginDrawing(at: location)
+        viewModel.endDrawing()
     }
 }

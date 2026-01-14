@@ -16,9 +16,9 @@ class ShapeFactory {
     ) -> any Shape {
         switch type {
         case .circle:
-            fatalError("Circle not yet implemented")
+            return Circle(bounds: bounds, style: style)
         case .rectangle:
-            fatalError("Rectangle not yet implemented")
+            return Rectangle(bounds: bounds, style: style)
         case .triangle:
             fatalError("Triangle not yet implemented")
         case .freehand:
