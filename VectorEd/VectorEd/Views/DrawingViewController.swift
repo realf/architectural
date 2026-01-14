@@ -14,6 +14,22 @@ class DrawingViewController: UIViewController {
 
     // MARK: - Views
 
+    private lazy var rectangleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Rectangle", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(rectangleToolTapped), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var circleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Circle", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(circleToolTapped), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var canvasView: DrawingCanvasView = {
         let view = DrawingCanvasView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -46,15 +62,22 @@ class DrawingViewController: UIViewController {
     private func setupViews() {
         view.backgroundColor = .secondarySystemBackground
         view.addSubview(canvasView)
-        // TODO: Other views
+        view.addSubview(rectangleButton)
+        view.addSubview(circleButton)
     }
 
     private func setupLayout() {
         NSLayoutConstraint.activate([
-            canvasView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            canvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            canvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            circleButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            circleButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+
+            rectangleButton.topAnchor.constraint(equalTo: circleButton.topAnchor),
+            rectangleButton.trailingAnchor.constraint(equalTo: circleButton.leadingAnchor, constant: -10),
+
+            canvasView.topAnchor.constraint(equalTo: circleButton.bottomAnchor, constant: 20),
+            canvasView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            canvasView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            canvasView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
         ])
 
         // TODO: other views
@@ -106,5 +129,15 @@ class DrawingViewController: UIViewController {
         let location = gesture.location(in: canvasView)
         viewModel.beginDrawing(at: location)
         viewModel.endDrawing()
+    }
+
+    // MARK: - ACtions
+
+    @objc private func circleToolTapped() {
+        viewModel.currentTool = .circle
+    }
+
+    @objc private func rectangleToolTapped() {
+        viewModel.currentTool = .rectangle
     }
 }
