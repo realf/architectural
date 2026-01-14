@@ -10,7 +10,7 @@ import UIKit
 /// Core protocol that all drawable shapes must conform to
 protocol Shape: Codable, Identifiable {
     var id: UUID { get }
-
+    var creationDate: Date { get }
     var bounds: CGRect { get set }
     var style: DrawingStyle { get set }
     var shapeType: ShapeType { get }
@@ -26,4 +26,3 @@ enum ShapeType: String, Codable {
     case triangle
     case freehand
 }
-
