@@ -41,7 +41,10 @@ class DrawingViewModel {
         persistenceService: any DrawingPersistence =
             DrawingPersistenceService()
     ) {
-        self.document = DrawingDocument(canvasSize: canvasSize)
+        self.document = DrawingDocument(
+            canvasSize: canvasSize,
+            title: "New Document"
+        )
         self.persistenceService = persistenceService
         self.currentStyle = DrawingStyle()
     }

@@ -19,14 +19,16 @@ struct DrawingDocument: Codable {
     init(
         id: UUID = UUID(),
         canvasSize: CGSize,
-        shapes: [any Shape] = []
+        shapes: [any Shape] = [],
+        title: String
     ) {
         self.id = id
         self.canvasSize = canvasSize
         self.shapes = shapes.map { AnyShape($0) }
         self.metadata = DocumentMetadata(
             createdAt: Date(),
-            modifiedAt: Date()
+            modifiedAt: Date(),
+            title: title
         )
     }
 
